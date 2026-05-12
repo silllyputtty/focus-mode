@@ -1,0 +1,26 @@
+# Xcode
+build/
+build_release/
+DerivedData/
+
+# Release artifacts (uploaded to GitHub Releases, not committed)
+dist/
+*.xcuserstate
+*.xcuserdatad/
+xcuserdata/
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+*.swp
+*.swo
+*~
+.vscode/

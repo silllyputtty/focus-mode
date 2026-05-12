@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Mode — Commit to an outcome. Then start the clock.</title>
+  <meta name="description" content="A native macOS menu bar app for designers, makers, and anyone who works better with a deadline they set themselves." />
+  <style>
+    :root {
+      --text: #1d1d1f;
+      --text-muted: #6e6e73;
+      --bg: #ffffff;
+      --link: #0066cc;
+      --primary: #0071e3;
+      --primary-hover: #0077ed;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    [data-theme="dark"] {
+      --text: #f5f5f7;
+      --text-muted: #86868b;
+      --bg: #000000;
+      --link: #2997ff;
+      --primary: #2997ff;
+      --primary-hover: #4ba9ff;
+    }
+
+    [data-theme="dark"] .demo-frame {
+      background: #1d1d1f;
+      border-color: #38383a;
+    }
+
+    [data-theme="dark"] .footer-inner {
+      border-color: #38383a;
+    }
+
+    [data-theme="dark"] .footer-links .sep {
+      color: #38383a;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: reveal 0.9s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+    }
+
+    .reveal:nth-of-type(1) { animation-delay: 0.1s; }
+    .reveal:nth-of-type(2) { animation-delay: 0.2s; }
+    .reveal:nth-of-type(3) { animation-delay: 0.3s; }
+    .reveal:nth-of-type(4) { animation-delay: 0.4s; }
+    .reveal:nth-of-type(5) { animation-delay: 0.5s; }
+
+    @keyframes reveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        animation: none;
+      }
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeIn 0.9s cubic-bezier(0.215, 0.61, 0.355, 1) 0.7s forwards;
+    }
+
+    .scroll-hint__label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .scroll-hint__line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--text-muted), transparent);
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-hint { opacity: 1; animation: none; }
+    }
+
+    .demo {
+      padding: 80px 24px 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .demo-frame {
+      width: 100%;
+      max-width: 1280px;
+      border: 1px solid #e5e5ea;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.08);
+    }
+
+    .demo-frame video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .demo-caption {
+      margin-top: 220px;
+      max-width: 640px;
+      text-align: center;
+    }
+
+    .demo-caption h2 {
+      font-size: clamp(22px, 2.8vw, 34px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .demo-caption p {
+      font-size: 19px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    h1 {
+      font-size: clamp(56px, 8vw, 96px);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 16px;
+    }
+
+    .strapline {
+      font-size: clamp(22px, 2.4vw, 32px);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-bottom: 28px;
+      max-width: 720px;
+    }
+
+    .description {
+      font-size: 19px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--text-muted);
+      max-width: 580px;
+      margin-bottom: 40px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 17px;
+      font-weight: 400;
+      padding: 12px 28px;
+      border-radius: 980px;
+      text-decoration: none;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      display: inline-block;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      color: var(--link);
+      padding: 12px 0;
+    }
+
+    .btn-secondary:hover {
+      text-decoration: underline;
+    }
+
+    .blurb {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      max-width: 520px;
+    }
+
+    .blurb a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    .blurb a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      padding: 0 24px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding-top: 32px;
+      border-top: 1px solid #e5e5ea;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px 32px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-links .sep {
+      margin: 0 12px;
+      color: #c7c7cc;
+    }
+
+    .logo-floater {
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      width: 96px;
+      height: 96px;
+      display: block;
+      animation: float 4s ease-in-out 0.4s infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-16px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .logo { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="logo-floater reveal">
+      <img class="logo" src="images/transparent-bg/focus-mode-icon@3x.png" alt="Focus Mode app icon" />
+    </div>
+
+    <h1 class="reveal">Focus Mode</h1>
+    <p class="strapline reveal">Commit to an outcome. Then start the clock.</p>
+    <p class="description reveal">
+      A native macOS menu bar app for designers, makers, and anyone who works better with a deadline they set themselves.
+    </p>
+    <div class="actions reveal">
+      <a class="btn btn-primary" href="https://github.com/SilllyPuttty/focus-mode">Download for Mac</a>
+      <a class="btn btn-secondary" href="https://github.com/SilllyPuttty/focus-mode">View on GitHub</a>
+    </div>
+    <p class="blurb reveal">
+      Lives in your Mac menu bar. Free and open source.
+    </p>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <span class="scroll-hint__label">Watch demo</span>
+      <span class="scroll-hint__line"></span>
+    </div>
+  </section>
+
+  <section class="demo">
+    <div class="demo-frame">
+      <video autoplay muted loop playsinline preload="auto" poster="images/assets/demo-poster.png">
+        <source src="videos/demo.mp4" type="video/mp4" />
+      </video>
+    </div>
+
+    <div class="demo-caption">
+      <h2>Quiet by design.</h2>
+      <p>No accounts, no streaks, just you and a notification or two.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-links">
+        <span>Designed in Melbourne, Australia</span>
+        <span class="sep">|</span>
+        <a href="https://www.linkedin.com/in/oliver-puttick/" target="_blank" rel="noopener">Silly Putty Studios</a>
+        <span class="sep">|</span>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfLZZatZ4KgezkacNFMsEipdeF4KRxKLsWfI6aboaQVMs13_Q/viewform" target="_blank" rel="noopener">Send feedback</a>
+      </div>
+      <span>Copyright © 2026 Oliver Puttick. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    console.log(
+      "%cHint: this page listens. Try 'dark'. Try 'light'.",
+      "font: 14px -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; color: #6e6e73;"
+    );
+
+    (function () {
+      let buffer = '';
+      window.addEventListener('keydown', (e) => {
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key.length !== 1) return;
+        buffer = (buffer + e.key.toLowerCase()).slice(-10);
+        if (buffer.endsWith('dark')) {
+          document.documentElement.dataset.theme = 'dark';
+        } else if (buffer.endsWith('light')) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      });
+    })();
+
+  </script>
+</body>
+</html>
