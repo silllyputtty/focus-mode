@@ -1,4 +1,11 @@
-# Focus Mode
+```
+███████╗ ██████╗  ██████╗██╗   ██╗███████╗    ███╗   ███╗ ██████╗ ██████╗ ███████╗
+██╔════╝██╔═══██╗██╔════╝██║   ██║██╔════╝    ████╗ ████║██╔═══██╗██╔══██╗██╔════╝
+█████╗  ██║   ██║██║     ██║   ██║███████╗    ██╔████╔██║██║   ██║██║  ██║█████╗  
+██╔══╝  ██║   ██║██║     ██║   ██║╚════██║    ██║╚██╔╝██║██║   ██║██║  ██║██╔══╝  
+██║     ╚██████╔╝╚██████╗╚██████╔╝███████║    ██║ ╚═╝ ██║╚██████╔╝██████╔╝███████╗
+╚═╝      ╚═════╝  ╚═════╝ ╚═════╝ ╚══════╝    ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝
+```
 
 A native macOS menu bar focus timer for designers, makers, and anyone who works better with a deadline they set themselves.
 
@@ -8,8 +15,10 @@ A native macOS menu bar focus timer for designers, makers, and anyone who works 
 
 ## How it works
 
+Most timers measure how long you worked. Focus Mode measures whether you finished what you said you'd finish. Naming the deliverable before the clock starts turns "work for an hour" into "ship this by 3pm."
+
 1. Open the app from your menu bar
-2. Set a focus and an outcome
+2. Set your focus and the outcome (the artefact you'll deliver)
 3. Choose a duration
 4. Start the timer
 5. Get a quiet completion notification when time's up
